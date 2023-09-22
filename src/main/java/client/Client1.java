@@ -1,6 +1,7 @@
 package client;
 
 import config.Config;
+import log.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class Client1 {
     private static BufferedReader inMess;
     private static PrintWriter outMess;
     private static Scanner scannerConsole;
+    private static final Logger LOGGER = Logger.getLogger();
 
     public static void main(String[] args) throws IOException {
         clientSocket = new Socket(config.getHost(), config.getPort());
@@ -47,6 +49,7 @@ public class Client1 {
 
         // поток отправляет сообщения на сервер
         new Thread(() -> {
+            LOGGER.log("Напишите своё имя");
             System.out.println("Напишите своё имя");
             while (true) {
                 if (scannerConsole.hasNext()) {

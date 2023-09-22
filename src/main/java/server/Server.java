@@ -1,5 +1,8 @@
 package server;
 
+import config.Config;
+import log.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,16 +14,18 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Server {
+    static final Config config = Config.getInstance();
     private static Map<Integer, User> users = new HashMap<>();
-
+    private static final Logger LOGGER = Logger.getLogger();
     public static void main(String[] args) {
-        int port = 8090;
 
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket(config.getPort())) {
+            LOGGER.log("Start server");
             System.out.println("Start server");
             while (true) {
                 try {
                     Socket clientSocket = serverSocket.accept();
+                    LOGGER.log("К чату подключился новый участник с портом: " + clientSocket.getPort());
                     System.out.println(("К чату подключился новый участник с портом: " + clientSocket.getPort()));
                     new Thread(() -> {
                         try (PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) { // канал записи в сокет
@@ -30,6 +35,7 @@ public class Server {
                             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                             String name = in.readLine();
                             user.setName(name);
+                            LOGGER.log("К чату подключился новый пользователь: " + user);
                             sendMessToAll("К чату подключился новый пользователь: " + user);
                             waitMessAndSend(clientSocket, user.toString());
                         } catch (IOException e) {
@@ -54,6 +60,7 @@ public class Server {
     public static synchronized void sendMessToAll(String mess) {
         for (Map.Entry<Integer, User> entry : users.entrySet()) {
             entry.getValue().sendMsg(mess);
+            LOGGER.log("Отправлено новое сообщение");
             System.out.println("Отправлено новое сообщение");
         }
     }
@@ -65,6 +72,7 @@ public class Server {
                     String mess = inMess.nextLine();
                     switch (mess) {
                         default:
+                            LOGGER.log('"' + name + '"' + ": " + mess);
                             sendMessToAll('"' + name + '"' + ": " + mess);
                     }
                 }
