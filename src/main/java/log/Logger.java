@@ -23,6 +23,7 @@ public class Logger {
         try {
             PrintWriter writer = new PrintWriter(new FileWriter(PATH, true));
             writer.write(LocalDateTime.now().format(formatter) + " " + message + "\n");
+            writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

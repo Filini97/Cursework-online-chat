@@ -61,7 +61,6 @@ public class Server {
         for (Map.Entry<Integer, User> entry : users.entrySet()) {
             entry.getValue().sendMsg(mess);
             LOGGER.log("Отправлено новое сообщение");
-            System.out.println("Отправлено новое сообщение");
         }
     }
 
