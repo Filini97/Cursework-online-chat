@@ -25,7 +25,7 @@ public class Server {
             while (true) {
                 try {
                     Socket clientSocket = serverSocket.accept();
-                    LOGGER.log("К чату подключился новый участник с портом: " + clientSocket.getPort());
+                    //LOGGER.log("К чату подключился новый участник с портом: " + clientSocket.getPort());
                     System.out.println(("К чату подключился новый участник с портом: " + clientSocket.getPort()));
                     new Thread(() -> {
                         try (PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) { // канал записи в сокет
@@ -35,7 +35,7 @@ public class Server {
                             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                             String name = in.readLine();
                             user.setName(name);
-                            LOGGER.log("К чату подключился новый пользователь: " + user);
+                            LOGGER.log("К чату подключился новый пользователь по имени " + '"' + user + '"' + " с портом номер: " + clientSocket.getPort());
                             sendMessToAll("К чату подключился новый пользователь: " + user);
                             waitMessAndSend(clientSocket, user.toString());
                         } catch (IOException e) {
@@ -58,9 +58,9 @@ public class Server {
     }
 
     public static synchronized void sendMessToAll(String mess) {
+
         for (Map.Entry<Integer, User> entry : users.entrySet()) {
             entry.getValue().sendMsg(mess);
-            LOGGER.log("Отправлено новое сообщение");
         }
     }
 
@@ -70,8 +70,12 @@ public class Server {
                 if (inMess.hasNext()) {
                     String mess = inMess.nextLine();
                     switch (mess) {
+                        case ("/exit"):
+                            LOGGER.log("Пользователь по имени " + '"' + name + '"' + " (" + clientSocket.getPort() +")" + " покинул чат.");
+                            sendMessToAll("Пользователь " + '"' + name + '"' + " покинул чат.");
+                            break;
                         default:
-                            LOGGER.log('"' + name + '"' + ": " + mess);
+                            LOGGER.log("Сообщение от пользователя " + '"' + name + '"' + " (" + clientSocket.getPort() +")" + ": " + mess);
                             sendMessToAll('"' + name + '"' + ": " + mess);
                     }
                 }

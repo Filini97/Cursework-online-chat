@@ -49,7 +49,6 @@ public class Client1 {
 
         // поток отправляет сообщения на сервер
         new Thread(() -> {
-            LOGGER.log("Напишите своё имя");
             System.out.println("Напишите своё имя");
             while (true) {
                 if (scannerConsole.hasNext()) {
