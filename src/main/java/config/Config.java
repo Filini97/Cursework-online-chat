@@ -14,7 +14,6 @@ public class Config {
         try (FileReader fileReader = new FileReader(PATH)) {
             Properties props = new Properties();
             props.load(fileReader);
-
             port = Integer.parseInt(props.getProperty("port"));
             host = props.getProperty("host");
         } catch (IOException e) {

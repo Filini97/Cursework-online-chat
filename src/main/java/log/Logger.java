@@ -18,13 +18,15 @@ public class Logger {
         return logger;
     }
 
-    public void log (String message) {
+    public boolean log (String message) {
         try {
             PrintWriter writer = new PrintWriter(new FileWriter(PATH, true));
             writer.write(LocalDateTime.now().format(formatter) + " " + message + "\n");
             writer.flush();
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }
