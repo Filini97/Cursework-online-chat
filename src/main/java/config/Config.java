@@ -4,6 +4,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * Класс, представляющий конфигурацию сервера и клиентов чата.
+ * Извлекает настройки из файла настроек и предоставляет методы доступа к ним.
+ */
 public class Config {
     private static Config instance;
     private static final String PATH = "./config/settings.properties";

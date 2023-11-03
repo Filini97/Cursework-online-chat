@@ -18,7 +18,6 @@ public class Client1 {
     private static BufferedReader inMess;
     private static PrintWriter outMess;
     private static Scanner scannerConsole;
-    private static final Logger LOGGER = Logger.getLogger();
 
     public static void main(String[] args) throws IOException {
         clientSocket = new Socket(config.getHost(), config.getPort());

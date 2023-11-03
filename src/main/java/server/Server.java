@@ -14,27 +14,25 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Server {
-    static final Config config = Config.getInstance();
-    private static Map<Integer, User> users = new HashMap<>();
-    private static final Logger LOGGER = Logger.getLogger();
+    static final Config config = Config.getInstance(); // Получение конфигурации сервера
+    private static Map<Integer, User> users = new HashMap<>(); // Коллекция для хранения подключенных пользователей
+    private static final Logger LOGGER = Logger.getLogger(); // Получение экземпляра логгера
     public static void main(String[] args) {
 
         try (ServerSocket serverSocket = new ServerSocket(config.getPort())) {
-            LOGGER.log("Start server");
+            LOGGER.log("Start server"); // Запись в лог о запуске сервера
             System.out.println("Start server");
             while (true) {
                 try {
                     Socket clientSocket = serverSocket.accept();
-                    //LOGGER.log("К чату подключился новый участник с портом: " + clientSocket.getPort());
                     System.out.println(("К чату подключился новый участник с портом: " + clientSocket.getPort()));
                     new Thread(() -> {
                         try (PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) { // канал записи в сокет
-                            User user = new User(clientSocket, out);
-                            users.put(clientSocket.getPort(), user);
-                            //присвоение имени для user
+                            User user = new User(clientSocket, out); // Создание объекта пользователя
+                            users.put(clientSocket.getPort(), user); // Добавление пользователя в коллекцию
                             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                            String name = in.readLine();
-                            user.setName(name);
+                            String name = in.readLine(); // Чтение имени пользователя
+                            user.setName(name);// Присвоение имени для user
                             LOGGER.log("К чату подключился новый пользователь по имени " + '"' + user + '"' + " с портом номер: " + clientSocket.getPort());
                             sendMessToAll("К чату подключился новый пользователь: " + user);
                             waitMessAndSend(clientSocket, user.toString());
@@ -42,7 +40,7 @@ public class Server {
                             e.printStackTrace();
                         } finally {
                             try {
-                                clientSocket.close(); // закрываем сокет клиента
+                                clientSocket.close();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

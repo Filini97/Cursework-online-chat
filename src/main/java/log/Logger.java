@@ -19,6 +19,7 @@ public class Logger {
     }
 
     public boolean log (String message) {
+        // Записывает сообщение в файл логов с указанием текущей даты и времени
         try {
             PrintWriter writer = new PrintWriter(new FileWriter(PATH, true));
             writer.write(LocalDateTime.now().format(formatter) + " " + message + "\n");
